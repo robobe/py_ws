@@ -16,6 +16,8 @@ class MyNode(Node):
         self.srv = self.create_service(Counter, SRV_TOPIC, self.service_handler)
 
     def service_handler(self, request: Counter_Request, response: Counter_Response):
+        if request.count > 100:
+            raise Exception("count out of range")
         for i in range(request.count):
             self.get_logger().info(f"Service current count: {i}")
             time.sleep(1)

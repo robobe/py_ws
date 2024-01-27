@@ -23,7 +23,8 @@ setup(
             "action_server=simples.action_server:main",
             "action_client=simples.action_client:main",
             "service_server=simples.service_server:main",
-            "service_client=simples.service_client:main"
+            "service_client=simples.service_client:main",
+            "service_client_timeout=simples.service_client_timeout:main"
         ],
     },
 )

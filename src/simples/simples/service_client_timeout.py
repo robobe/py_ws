@@ -19,14 +19,28 @@ class MyNode(Node):
             self.get_logger().warning("Service not ready")
 
         msg = Counter.Request()
-        msg.count = 20
+        msg.count = 10
+        self.wd = self.create_timer(2.0, self.timer_handler)
         self.future = self.client.call_async(msg)
         self.future.add_done_callback(self.service_handler)
+        
+    def timer_handler(self):
+        if self.future.done():
+            self.get_logger().info("service done")
+        else:
+            self.get_logger().info("service still working")
+            self.future.cancel()
+            self.get_logger().info("service canceled")
+            self.get_logger().info(f"call cancelled: {self.future.cancelled()}")
+        self.wd.cancel()
 
     def service_handler(self, future: Future):
         response: Counter_Response
         response = future.result()
-        self.get_logger().info(f"Service result: {response.total}")
+        if response:
+            self.get_logger().info(f"Service result: {response.total}")
+        else:
+            self.get_logger().info("no response from server")
         
         
 
